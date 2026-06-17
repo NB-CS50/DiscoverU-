@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OutlookU — Landing Page Template</title>
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+  /* ══════════════════════════════════════════
+     EDIT MODE STYLES — remove before going live
+  ══════════════════════════════════════════ */
+  .edit-toolbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9999;
+    background: #0a2540;
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.82rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  .edit-toolbar-left { display: flex; align-items: center; gap: 0.75rem; }
+  .edit-badge {
+    background: #0096c7;
+    color: #fff;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .edit-hint { color: rgba(255,255,255,0.65); font-size: 0.78rem; }
+  .edit-toolbar-right { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .tb-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 0.3rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tb-btn:hover { background: rgba(255,255,255,0.22); }
+  .tb-btn.primary { background: #0096c7; border-color: #0096c7; }
+  .tb-btn.primary:hover { background: #00b4d8; }
+  .tb-btn.danger { background: rgba(220,38,38,0.2); border-color: rgba(220,38,38,0.4); }
+  .tb-btn.danger:hover { background: rgba(220,38,38,0.35); }
+
+  [contenteditable="true"] {
+    outline: none;
+    border-radius: 4px;
+    transition: box-shadow 0.15s, background 0.15s;
+    cursor: text;
+  }
+  [contenteditable="true"]:hover {
+    background: rgba(0,150,199,0.06);
+    box-shadow: 0 0 0 2px rgba(0,150,199,0.2);
+  }
+  [contenteditable="true"]:focus {
+    background: rgba(0,150,199,0.09);
+    box-shadow: 0 0 0 2px rgba(0,150,199,0.45);
+  }
+  .edit-icon-btn {
+    width: 22px; height: 22px;
+    background: #0096c7;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .card-edit-wrap:hover .edit-icon-btn,
+  .shortcut-row:hover .edit-icon-btn,
+  .tip-card:hover .edit-icon-btn { opacity: 1; }
+
+  .add-card-btn {
+    background: rgba(0,150,199,0.06);
+    border: 2px dashed rgba(0,150,199,0.3);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    cursor: pointer;
+    color: rgba(0,150,199,0.7);
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    min-height: 180px;
+  }
+  .add-card-btn:hover { background: rgba(0,150,199,0.12); border-color: rgba(0,150,199,0.6); }
+  .add-card-btn svg { width: 28px; height: 28px; }
+
+  .add-tip-btn {
+    background: rgba(0,150,199,0.04);
+    border: 2px dashed rgba(0,150,199,0.25);
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: rgba(0,150,199,0.6);
+    font-size: 0.82rem;
+    font-family: 'Roboto', sans-serif;
+    transition: all 0.2s;
+    min-height: 80px;
+  }
+  .add-tip-btn:hover { background: rgba(0,150,199,0.1); border-color: rgba(0,150,199,0.5); }
+
+  .delete-card-btn {
+    position: absolute;
+    top: 0.75rem; right: 0.75rem;
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.25);
+    color: #dc2626;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+  }
+  .feature-card:hover .delete-card-btn { display: flex; }
+  .delete-card-btn:hover { background: rgba(220,38,38,0.2); }
+
+  .delete-tip-btn {
+    position: absolute;
+    top: 0.6rem; right: 0.6rem;
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.25);
+    color: #dc2626;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .tip-card { position: relative; }
+  .tip-card:hover .delete-tip-btn { display: flex; }
+
+  .delete-shortcut-btn {
+    background: rgba(220,38,38,0.1);
+    border: 1px solid rgba(220,38,38,0.25);
+    color: #dc2626;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 0.65rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+  }
+  .shortcut-row:hover .delete-shortcut-btn { display: flex; }
+
+  /* ══════════════════════════════════════════
+     DESIGN TOKENS
+  ══════════════════════════════════════════ */
+  :root {
+    --navy: #f0f8ff;
+    --navy-mid: #dceefb;
+    --navy-light: #b3d9f5;
+    --blue-accent: #0077b6;
+    --electric: #0096c7;
+    --electric-glow: #00b4d8;
+    --white: #ffffff;
+    --off-white: #e8f4fd;
+    --muted: #4a7fa5;
+    --card-bg: #ffffff;
+    --card-border: rgba(0,150,199,0.18);
+    --gold: #f0a500;
+    --text-dark: #0a2540;
+    --text-mid: #1a4a72;
+    --ai-green: #16a34a;
+    --ai-green-light: #22c55e;
+    --ai-green-glow: #4ade80;
+    --ai-green-pale: #f0fdf4;
+    --ai-green-mid: #dcfce7;
+    --ai-green-border: rgba(22,163,74,0.2);
+    --ai-dark: #052e16;
+    --ai-text: #14532d;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Roboto', sans-serif;
+    background: var(--navy);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    cursor: default;
+    padding-top: 44px; /* toolbar height offset */
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.3;
+  }
+
+  /* ─── NAVBAR ─── */
+  nav {
+    position: fixed;
+    top: 44px; left: 0; right: 0; /* below edit toolbar */
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(0,150,199,0.18);
+    box-shadow: 0 2px 20px rgba(0,119,182,0.08);
+  }
+  .nav-logo {
+    font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 1.4rem;
+    color: var(--text-dark); text-decoration: none;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo span { color: var(--electric); }
+  .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+    padding: 0.4rem 0.85rem; border-radius: 6px; transition: all 0.2s; letter-spacing: 0.02em;
+  }
+  .nav-links a:hover { color: var(--text-dark); background: rgba(0,150,199,0.1); }
+  .nav-cta { background: var(--electric) !important; color: var(--white) !important; font-weight: 700 !important; border-radius: 8px !important; }
+  .nav-cta:hover { background: var(--electric-glow) !important; color: var(--white) !important; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden;
+    background: linear-gradient(160deg, #e0f3fb 0%, #f0f8ff 50%, #cce8f7 100%);
+  }
+  .hero-bg-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,150,199,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(0,150,199,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift { from { transform: translateY(0); } to { transform: translateY(60px); } }
+  .hero-orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+  .orb1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,150,199,0.25), transparent 70%); top: -100px; left: -100px; animation: float1 8s ease-in-out infinite; }
+  .orb2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,180,216,0.2), transparent 70%); bottom: -50px; right: -100px; animation: float2 10s ease-in-out infinite; }
+  @keyframes float1 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(30px,20px);} }
+  @keyframes float2 { 0%,100%{transform:translate(0,0);} 50%{transform:translate(-20px,-30px);} }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: rgba(0,150,199,0.1); border: 1px solid rgba(0,150,199,0.35);
+    border-radius: 999px; padding: 0.35rem 1rem;
+    font-size: 0.8rem; font-weight: 500; color: var(--electric);
+    margin-bottom: 1.5rem; letter-spacing: 0.05em; text-transform: uppercase;
+    animation: fadeDown 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; background: var(--electric);
+    border-radius: 50%; animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.8);} }
+
+  .hero h1 {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 700;
+    line-height: 1.05; letter-spacing: -0.02em; margin-bottom: 1.5rem;
+    color: var(--text-dark); animation: fadeUp 0.9s 0.2s ease both;
+  }
+  .hero h1 .line2 { color: transparent; -webkit-text-stroke: 1.5px rgba(0,150,199,0.7); }
+  .hero h1 em { font-style: normal; color: var(--electric); position: relative; }
+  .hero h1 em::after {
+    content: ''; position: absolute; left: 0; bottom: -4px;
+    width: 100%; height: 3px; background: var(--electric); border-radius: 2px;
+    animation: underlineGrow 1s 1s ease both; transform-origin: left; transform: scaleX(0);
+  }
+  @keyframes underlineGrow { to { transform: scaleX(1); } }
+  .hero p {
+    font-size: 1.15rem; color: var(--muted); max-width: 560px;
+    line-height: 1.7; margin-bottom: 2.5rem; font-weight: 300;
+    animation: fadeUp 0.9s 0.4s ease both;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.9s 0.6s ease both; }
+  .btn-primary {
+    background: var(--electric); color: var(--white); font-weight: 700; font-size: 0.95rem;
+    padding: 0.85rem 2rem; border-radius: 10px; text-decoration: none; transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+  }
+  .btn-primary:hover { background: var(--electric-glow); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,150,199,0.3); }
+  .btn-secondary {
+    background: transparent; color: var(--text-dark); font-weight: 500; font-size: 0.95rem;
+    padding: 0.85rem 2rem; border-radius: 10px; text-decoration: none;
+    border: 1px solid rgba(0,119,182,0.3); transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+  }
+  .btn-secondary:hover { border-color: var(--electric); color: var(--electric); transform: translateY(-2px); }
+  .hero-scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: var(--muted); font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+    animation: fadeUp 1s 1s ease both;
+  }
+  .scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--electric), transparent); animation: scrollDown 2s ease-in-out infinite; }
+  @keyframes scrollDown { 0%,100%{transform:scaleY(1);opacity:1;} 50%{transform:scaleY(0.5);opacity:0.5;} }
+
+  /* ─── SECTIONS ─── */
+  section { position: relative; z-index: 1; }
+  .section-label { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--electric); margin-bottom: 0.75rem; }
+  .section-title { font-family: 'Ubuntu', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1rem; color: var(--text-dark); }
+  .section-sub { font-family: 'Roboto', sans-serif; color: var(--muted); font-size: 1rem; line-height: 1.7; max-width: 520px; font-weight: 300; }
+
+  /* ─── FEATURES GRID ─── */
+  .features { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .features-header { text-align: center; margin-bottom: 4rem; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
+
+  .feature-card {
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px;
+    padding: 1.75rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative; overflow: visible; text-decoration: none; color: inherit;
+    display: block; box-shadow: 0 2px 12px rgba(0,119,182,0.07);
+  }
+  .feature-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(0,150,199,0.06), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .feature-card:hover { transform: translateY(-6px); border-color: rgba(0,150,199,0.45); box-shadow: 0 20px 60px rgba(0,119,182,0.15), 0 0 0 1px rgba(0,150,199,0.12); }
+  .feature-card:hover::before { opacity: 1; }
+  .card-number { font-family: 'Ubuntu', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--electric); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; opacity: 0.7; }
+  .card-icon { width: 48px; height: 48px; background: rgba(0,150,199,0.1); border: 1px solid rgba(0,150,199,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 1.25rem; transition: all 0.3s; }
+  .feature-card:hover .card-icon { background: rgba(0,150,199,0.2); transform: scale(1.1) rotate(-5deg); }
+  .card-title { font-family: 'Ubuntu', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; color: var(--text-dark); }
+  .card-desc { font-size: 0.875rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+  .card-arrow { position: absolute; bottom: 1.5rem; right: 1.5rem; width: 28px; height: 28px; background: rgba(0,150,199,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; opacity: 0; transition: all 0.3s; transform: translateX(-4px); color: var(--electric); }
+  .feature-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+  /* ─── TIPS SECTION ─── */
+  .tips-section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .tips-header { margin-bottom: 3rem; }
+  .tips-track { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .tip-card { background: var(--white); border: 1px solid rgba(0,150,199,0.12); border-radius: 14px; padding: 1.5rem; transition: all 0.3s; box-shadow: 0 2px 10px rgba(0,119,182,0.06); }
+  .tip-card:hover { border-color: rgba(0,150,199,0.3); background: rgba(0,150,199,0.04); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,119,182,0.12); }
+  .tip-emoji { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .tip-title { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text-dark); }
+  .tip-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ─── KEYBOARD SHORTCUTS ─── */
+  .shortcuts-section { padding: 5rem 2rem; background: rgba(0,150,199,0.03); border-top: 1px solid rgba(0,150,199,0.1); border-bottom: 1px solid rgba(0,150,199,0.1); }
+  .shortcuts-inner { max-width: 1000px; margin: 0 auto; }
+  .shortcuts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.75rem; margin-top: 2.5rem; }
+  .shortcut-row { display: flex; align-items: center; justify-content: space-between; background: var(--white); border: 1px solid var(--card-border); border-radius: 10px; padding: 0.85rem 1.1rem; transition: border-color 0.2s; box-shadow: 0 1px 6px rgba(0,119,182,0.05); gap: 0.5rem; }
+  .shortcut-row:hover { border-color: rgba(0,150,199,0.35); }
+  .shortcut-action { font-size: 0.875rem; color: var(--text-mid); flex: 1; }
+  .shortcut-keys { display: flex; gap: 0.25rem; align-items: center; flex-shrink: 0; }
+  kbd { background: rgba(0,150,199,0.08); border: 1px solid rgba(0,150,199,0.2); border-bottom: 2px solid rgba(0,150,199,0.12); border-radius: 5px; padding: 0.2rem 0.5rem; font-size: 0.72rem; font-family: monospace; color: var(--electric); font-weight: 600; }
+
+  /* ─── AI SECTION ─── */
+  .ai-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(160deg, #f0fdf4 0%, #fff 60%, #dcfce7 100%);
+    border-top: 1px solid rgba(22,163,74,0.12);
+    overflow: hidden; position: relative;
+  }
+  .ai-orb-1 { position: absolute; width: 400px; height: 400px; border-radius: 50%; filter: blur(90px); background: radial-gradient(circle, rgba(22,163,74,0.18), transparent 70%); top: -80px; left: -80px; pointer-events: none; }
+  .ai-orb-2 { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(80px); background: radial-gradient(circle, rgba(74,222,128,0.12), transparent 70%); bottom: -60px; right: 10%; pointer-events: none; }
+  .ai-section-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .ai-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .ai-section-label { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ai-green); margin-bottom: 0.75rem; background: rgba(22,163,74,0.1); padding: 0.25rem 0.75rem; border-radius: 999px; }
+  .ai-section h2 { font-family: 'Ubuntu', sans-serif; font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 1rem; color: var(--text-dark); }
+  .ai-section h2 em { font-style: normal; color: var(--ai-green); }
+  .ai-section p { color: var(--muted); font-size: 1rem; line-height: 1.75; margin-bottom: 2rem; font-weight: 300; max-width: 440px; }
+  .ai-feature-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .ai-pill { background: rgba(22,163,74,0.08); border: 1px solid rgba(22,163,74,0.2); border-radius: 999px; padding: 0.35rem 0.85rem; font-size: 0.8rem; color: var(--ai-text); display: flex; align-items: center; gap: 0.35rem; transition: all 0.2s; cursor: default; }
+  .ai-pill:hover { background: rgba(22,163,74,0.15); border-color: rgba(22,163,74,0.35); }
+  .btn-ai { background: var(--ai-green); color: #fff; font-weight: 700; font-size: 0.95rem; padding: 0.85rem 2rem; border-radius: 10px; border: none; cursor: pointer; transition: all 0.25s; font-family: 'Roboto', sans-serif; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .btn-ai:hover { background: var(--ai-green-light); transform: translateY(-2px); box-shadow: 0 10px 30px rgba(22,163,74,0.3); }
+  .ai-preview-card { background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(22,163,74,0.15), 0 0 0 1px rgba(22,163,74,0.12); overflow: hidden; }
+  .ai-preview-topbar { background: var(--ai-dark); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.4rem; }
+  .topbar-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .topbar-title { font-size: 0.75rem; color: rgba(255,255,255,0.6); font-family: 'Roboto', sans-serif; margin-left: 0.5rem; }
+  .ai-preview-body { padding: 0.75rem; border-bottom: 1px solid rgba(22,163,74,0.1); }
+  .preview-email-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 0.5rem; border-radius: 8px; transition: background 0.2s; cursor: default; }
+  .preview-email-row:hover { background: var(--ai-green-pale); }
+  .preview-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ai-green); flex-shrink: 0; }
+  .preview-dot.read { background: transparent; border: 1.5px solid #d1d5db; }
+  .preview-email-info { flex: 1; }
+  .preview-sender { font-size: 0.78rem; font-weight: 600; color: #1f2937; font-family: 'Roboto', sans-serif; }
+  .preview-subj { font-size: 0.72rem; color: #6b7280; font-family: 'Roboto', sans-serif; }
+  .preview-time { font-size: 0.68rem; color: #9ca3af; font-family: 'Roboto', sans-serif; white-space: nowrap; }
+  .ai-preview-chat { padding: 0.85rem; background: var(--ai-green-pale); }
+  .preview-chat-msg { font-size: 0.8rem; color: var(--ai-text); line-height: 1.55; background: #fff; border-radius: 10px 10px 10px 3px; padding: 0.85rem 1rem; margin-bottom: 0.65rem; font-family: 'Roboto', sans-serif; border: 1px solid rgba(22,163,74,0.15); box-shadow: 0 2px 8px rgba(22,163,74,0.06); }
+  .preview-input-bar { display: flex; gap: 0.5rem; align-items: center; background: #fff; border-radius: 10px; padding: 0.5rem 0.75rem; border: 1px solid rgba(22,163,74,0.2); }
+  .preview-input { font-size: 0.78rem; color: #9ca3af; font-family: 'Roboto', sans-serif; flex: 1; }
+  .preview-send-btn { background: var(--ai-green); color: #fff; border: none; border-radius: 7px; padding: 0.3rem 0.65rem; font-size: 0.72rem; font-weight: 600; cursor: pointer; font-family: 'Roboto', sans-serif; transition: background 0.2s; }
+  .preview-send-btn:hover { background: var(--ai-green-light); }
+
+  /* ─── AI FLOATING BUTTON ─── */
+  .ai-fab { position: fixed; bottom: 2rem; right: 2rem; z-index: 300; width: 58px; height: 58px; background: var(--ai-green); border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(22,163,74,0.5); transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); color: white; font-size: 1.4rem; }
+  .ai-fab:hover { transform: scale(1.12); box-shadow: 0 8px 32px rgba(22,163,74,0.6); }
+  .ai-fab::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid rgba(22,163,74,0.4); animation: fabPulse 2s ease-in-out infinite; }
+  @keyframes fabPulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.18);opacity:0.4;} }
+  .ai-fab-tooltip { position: absolute; right: 70px; background: var(--ai-dark); color: #fff; font-size: 0.75rem; font-family: 'Roboto', sans-serif; padding: 0.4rem 0.85rem; border-radius: 8px; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(6px); transition: all 0.2s; }
+  .ai-fab:hover .ai-fab-tooltip { opacity: 1; transform: translateX(0); }
+
+  /* ─── FOOTER ─── */
+  footer { padding: 3rem 2rem; border-top: 1px solid rgba(0,150,199,0.1); text-align: center; background: var(--white); }
+  .footer-logo { font-family: 'Ubuntu', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--text-dark); margin-bottom: 0.75rem; }
+  .footer-logo span { color: var(--electric); }
+  .footer-text { font-size: 0.8rem; color: var(--muted); }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar { position: fixed; top: 44px; left: 0; height: 2px; background: linear-gradient(to right, var(--blue-accent), var(--electric)); z-index: 200; transition: width 0.1s; width: 0%; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-links { display: none; }
+    .ai-section-grid { grid-template-columns: 1fr; }
+    .tips-track { grid-template-columns: 1fr 1fr; }
+    .shortcuts-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .tips-track { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; align-items: center; }
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     EDIT TOOLBAR (visible in template mode)
+══════════════════════════════════════════ -->
+<div class="edit-toolbar" id="editToolbar">
+  <div class="edit-toolbar-left">
+    <span class="edit-badge">✏️ Template Mode</span>
+    <span class="edit-hint">Click any text to edit it • Hover cards to delete or reorder</span>
+  </div>
+  <div class="edit-toolbar-right">
+    <button class="tb-btn" onclick="addFeatureCard()">+ Feature Card</button>
+    <button class="tb-btn" onclick="addTipCard()">+ Tip Card</button>
+    <button class="tb-btn" onclick="addShortcutRow()">+ Shortcut</button>
+    <button class="tb-btn" onclick="addNavLink()">+ Nav Link</button>
+    <button class="tb-btn primary" onclick="exportHTML()">⬇ Export HTML</button>
+    <button class="tb-btn danger" onclick="removeEditMode()">🚀 Preview Mode</button>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ══════════════════════════════════════════
+     NAV — Edit: click logo text, link labels
+══════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo"><span contenteditable="true" spellcheck="false">Outlook</span><span contenteditable="true" spellcheck="false" style="color:var(--electric)">U</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#features" contenteditable="true" spellcheck="false">Features</a></li>
+    <li><a href="#tips" contenteditable="true" spellcheck="false">Quick Tips</a></li>
+    <li><a href="#shortcuts" contenteditable="true" spellcheck="false">Shortcuts</a></li>
+    <li><a href="#ai-section" contenteditable="true" spellcheck="false">AI Assistant</a></li>
+    <li><a href="#ai-section" class="nav-cta" contenteditable="true" spellcheck="false">Try AI →</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     HERO — Edit: badge, headline, subline, CTAs
+══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+
+  <div class="hero-badge" contenteditable="true" spellcheck="false">Microsoft Outlook · University Guide</div>
+
+  <h1>
+    <span contenteditable="true" spellcheck="false">Master Your</span><br/>
+    <em contenteditable="true" spellcheck="false">University</em> <span class="line2" contenteditable="true" spellcheck="false">Email</span>
+  </h1>
+
+  <p contenteditable="true" spellcheck="false">Everything you need to navigate Microsoft Outlook like a pro — from AI summaries to focused inboxes. Built for students, by students.</p>
+
+  <div class="hero-actions">
+    <a href="#features" class="btn-primary" contenteditable="true" spellcheck="false">🚀 Explore Features</a>
+    <a href="#ai-section" class="btn-secondary" contenteditable="true" spellcheck="false">🤖 Try AI Assistant</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span contenteditable="true" spellcheck="false">Scroll to learn</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FEATURES — Edit: header, each card (icon/title/desc)
+══════════════════════════════════════════ -->
+<section class="features" id="features">
+  <div class="features-header reveal">
+    <div class="section-label" contenteditable="true" spellcheck="false">8 Core Features</div>
+    <h2 class="section-title" contenteditable="true" spellcheck="false">Everything Outlook has to offer you</h2>
+    <p class="section-sub" contenteditable="true" spellcheck="false">Click on any feature card to dive deeper and learn step-by-step how to use it.</p>
+  </div>
+
+  <div class="features-grid" id="featuresGrid">
+
+    <div class="feature-card reveal" id="fc1">
+      <button class="delete-card-btn" onclick="deleteCard('fc1')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 01</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">🤖</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">AI Email Summary</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Use Microsoft Copilot to instantly summarize long email threads and catch up in seconds.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc2">
+      <button class="delete-card-btn" onclick="deleteCard('fc2')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 02</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">🏷️</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Marking & Tagging Messages</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Flag emails as highly important or low priority so you always know what needs attention first.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc3">
+      <button class="delete-card-btn" onclick="deleteCard('fc3')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 03</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">🎨</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Colour Coding</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Assign colours to categories — courses, clubs, admin — and visually organize your inbox at a glance.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc4">
+      <button class="delete-card-btn" onclick="deleteCard('fc4')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 04</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">▶️</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">YouTube Tutorial Links</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Handpicked video walkthroughs to help you learn Outlook features visually and at your own pace.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc5">
+      <button class="delete-card-btn" onclick="deleteCard('fc5')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 05</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">✍️</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Create Your Signature</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Set up a professional email signature with your name, department, and contact info — once and forever.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc6">
+      <button class="delete-card-btn" onclick="deleteCard('fc6')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 06</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">📁</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Creating Folders</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Organise emails into subject folders and eliminate inbox clutter with rules to auto-sort incoming mail.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc7">
+      <button class="delete-card-btn" onclick="deleteCard('fc7')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 07</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">🎯</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Focused Inbox</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Outlook automatically separates important emails from the rest so you only see what truly matters.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <div class="feature-card reveal" id="fc8">
+      <button class="delete-card-btn" onclick="deleteCard('fc8')" title="Delete card">✕</button>
+      <div class="card-number" contenteditable="true" spellcheck="false">Feature 08</div>
+      <div class="card-icon" contenteditable="true" spellcheck="false">📌</div>
+      <div class="card-title" contenteditable="true" spellcheck="false">Flagging & Pinning</div>
+      <div class="card-desc" contenteditable="true" spellcheck="false">Turn important emails into to-do items with due dates so nothing slips through the cracks.</div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <!-- Add card button -->
+    <div class="add-card-btn" onclick="addFeatureCard()" title="Add a new feature card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Add Feature Card
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     QUICK TIPS — Edit: header, each tip card
+══════════════════════════════════════════ -->
+<section class="tips-section" id="tips">
+  <div class="tips-header reveal">
+    <div class="section-label" contenteditable="true" spellcheck="false">Quick Tips</div>
+    <h2 class="section-title" contenteditable="true" spellcheck="false">Power-user habits to build from day one</h2>
+  </div>
+  <div class="tips-track" id="tipsTrack">
+
+    <div class="tip-card reveal" id="tip1">
+      <button class="delete-tip-btn" onclick="deleteTip('tip1')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">⚡</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Check Daily</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">Log in every morning. Lecturers often send time-sensitive updates about classes and assessments.</div>
+    </div>
+
+    <div class="tip-card reveal" id="tip2">
+      <button class="delete-tip-btn" onclick="deleteTip('tip2')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">📂</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Folder Per Module</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">Create a folder for each course at the start of semester. Use rules to auto-route emails there.</div>
+    </div>
+
+    <div class="tip-card reveal" id="tip3">
+      <button class="delete-tip-btn" onclick="deleteTip('tip3')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">✅</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Flag Deadlines</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">Whenever an email mentions a deadline, immediately flag it and set a due date reminder.</div>
+    </div>
+
+    <div class="tip-card reveal" id="tip4">
+      <button class="delete-tip-btn" onclick="deleteTip('tip4')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">🖊️</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Signature First</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">Set up your professional signature before sending your very first email — it signals seriousness.</div>
+    </div>
+
+    <div class="tip-card reveal" id="tip5">
+      <button class="delete-tip-btn" onclick="deleteTip('tip5')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">🔵</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Use Categories</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">Colour-code by urgency: red for urgent, blue for academic, green for administrative emails.</div>
+    </div>
+
+    <div class="tip-card reveal" id="tip6">
+      <button class="delete-tip-btn" onclick="deleteTip('tip6')" title="Delete tip">✕</button>
+      <div class="tip-emoji" contenteditable="true" spellcheck="false">🤖</div>
+      <div class="tip-title" contenteditable="true" spellcheck="false">Summarise Long Threads</div>
+      <div class="tip-text" contenteditable="true" spellcheck="false">For group project threads that spiral, use Copilot AI Summary to get the gist in one click.</div>
+    </div>
+
+    <div class="add-tip-btn" onclick="addTipCard()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Add Tip
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SHORTCUTS — Edit: heading, each row (action + keys)
+══════════════════════════════════════════ -->
+<section class="shortcuts-section" id="shortcuts">
+  <div class="shortcuts-inner">
+    <div class="reveal">
+      <div class="section-label" contenteditable="true" spellcheck="false">Keyboard Shortcuts</div>
+      <h2 class="section-title" contenteditable="true" spellcheck="false">Work faster. Skip the clicks.</h2>
+    </div>
+    <div class="shortcuts-grid" id="shortcutsGrid">
+
+      <div class="shortcut-row reveal" id="sc1">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Compose new email</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">N</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc1')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc2">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Reply to email</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">R</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc2')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc3">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Reply all</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">Shift</kbd>+<kbd contenteditable="true" spellcheck="false">R</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc3')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc4">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Forward email</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">F</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc4')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc5">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Send email</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">Enter</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc5')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc6">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Search inbox</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">E</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc6')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc7">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Flag / unflag message</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Insert</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc7')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc8">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Delete email</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Delete</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc8')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc9">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Mark as read</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">Q</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc9')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc10">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Go to inbox</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">Shift</kbd>+<kbd contenteditable="true" spellcheck="false">I</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc10')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc11">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Open calendar</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">2</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc11')" title="Delete">✕</button>
+      </div>
+
+      <div class="shortcut-row reveal" id="sc12">
+        <span class="shortcut-action" contenteditable="true" spellcheck="false">Switch to mail</span>
+        <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">1</kbd></div>
+        <button class="delete-shortcut-btn" onclick="deleteShortcut('sc12')" title="Delete">✕</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     AI ASSISTANT SECTION — Edit: label, heading, body, pills
+══════════════════════════════════════════ -->
+<section class="ai-section" id="ai-section">
+  <div class="ai-orb-1"></div>
+  <div class="ai-orb-2"></div>
+  <div class="ai-section-inner">
+    <div class="ai-section-grid">
+
+      <div class="reveal">
+        <div class="ai-section-label" contenteditable="true" spellcheck="false">New Feature</div>
+        <h2 contenteditable="true" spellcheck="false">Your <em>AI Email</em> Assistant is here</h2>
+        <p contenteditable="true" spellcheck="false">Ask questions about your emails, get instant summaries, draft professional replies to lecturers, and extract deadlines — all without ever leaving OutlookU.</p>
+        <div class="ai-feature-pills" id="aiPills">
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>✨</span> Summarize threads</div>
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>⏰</span> Find deadlines</div>
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>✍️</span> Draft replies</div>
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>🚨</span> Spot urgent items</div>
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>📋</span> Extract action items</div>
+          <div class="ai-pill" contenteditable="true" spellcheck="false"><span>🗂️</span> Suggest folders</div>
+        </div>
+        <button class="btn-ai" onclick="scrollToAI()">🤖 Open AI Assistant →</button>
+      </div>
+
+      <div class="reveal">
+        <div class="ai-preview-card">
+          <div class="ai-preview-topbar">
+            <div class="topbar-dot" style="background:#ff5f57"></div>
+            <div class="topbar-dot" style="background:#febc2e"></div>
+            <div class="topbar-dot" style="background:#28c840"></div>
+            <div class="topbar-title" contenteditable="true" spellcheck="false">OutlookU AI — Inbox Assistant</div>
+          </div>
+          <div class="ai-preview-body">
+            <div class="preview-email-row"><div class="preview-dot"></div><div class="preview-email-info"><div class="preview-sender" contenteditable="true" spellcheck="false">Dr. Mensah Asante</div><div class="preview-subj" contenteditable="true" spellcheck="false">COMM301 — Assignment 2 due Friday</div></div><div class="preview-time" contenteditable="true" spellcheck="false">9:02 AM</div></div>
+            <div class="preview-email-row"><div class="preview-dot"></div><div class="preview-email-info"><div class="preview-sender" contenteditable="true" spellcheck="false">Student Union</div><div class="preview-subj" contenteditable="true" spellcheck="false">Urgent: AGM vote closes tonight</div></div><div class="preview-time" contenteditable="true" spellcheck="false">8:14 AM</div></div>
+            <div class="preview-email-row"><div class="preview-dot read"></div><div class="preview-email-info"><div class="preview-sender" contenteditable="true" spellcheck="false">IT Services</div><div class="preview-subj" contenteditable="true" spellcheck="false">Re: VPN access for remote study</div></div><div class="preview-time" contenteditable="true" spellcheck="false">Yesterday</div></div>
+          </div>
+          <div class="ai-preview-chat">
+            <div class="preview-chat-msg" contenteditable="true" spellcheck="false">📋 <strong>I found 2 urgent items:</strong><br/>1. COMM301 Assignment 2 is due this Friday<br/>2. Student Union AGM vote closes tonight at midnight — you haven't voted yet.</div>
+            <div class="preview-input-bar">
+              <div class="preview-input" contenteditable="true" spellcheck="false">Draft my reply to Dr. Mensah...</div>
+              <button class="preview-send-btn">Send ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER — Edit: logo text, tagline
+══════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo" contenteditable="true" spellcheck="false">Outlook<span style="color:var(--electric)">U</span></div>
+  <p class="footer-text" contenteditable="true" spellcheck="false">A student-built guide to Microsoft Outlook · Made for Orientation · © 2025</p>
+</footer>
+
+<!-- AI Floating Button -->
+<button class="ai-fab" onclick="scrollToAI()" title="Open AI Assistant">
+  🤖
+  <div class="ai-fab-tooltip">AI Email Assistant</div>
+</button>
+
+<script>
+// ══════════════════════════════════════════
+// SCROLL TO AI SECTION
+// ══════════════════════════════════════════
+function scrollToAI() {
+  const section = document.getElementById('ai-section');
+  if (!section) return;
+  const toolbarH = document.getElementById('editToolbar').offsetHeight || 0;
+  const navH = document.querySelector('nav').offsetHeight || 0;
+  const top = section.getBoundingClientRect().top + window.scrollY - toolbarH - navH - 12;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════════
+// SCROLL REVEAL
+// ══════════════════════════════════════════
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ══════════════════════════════════════════
+// PROGRESS BAR
+// ══════════════════════════════════════════
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ══════════════════════════════════════════
+// COUNTERS FOR UNIQUE IDs
+// ══════════════════════════════════════════
+let fcCount = 8, tipCount = 6, scCount = 12;
+
+// ══════════════════════════════════════════
+// ADD FEATURE CARD
+// ══════════════════════════════════════════
+function addFeatureCard() {
+  fcCount++;
+  const id = 'fc' + fcCount;
+  const addBtn = document.querySelector('#featuresGrid .add-card-btn');
+  const card = document.createElement('div');
+  card.className = 'feature-card reveal';
+  card.id = id;
+  card.innerHTML = `
+    <button class="delete-card-btn" onclick="deleteCard('${id}')" title="Delete card">✕</button>
+    <div class="card-number" contenteditable="true" spellcheck="false">Feature ${String(fcCount).padStart(2,'0')}</div>
+    <div class="card-icon" contenteditable="true" spellcheck="false">⭐</div>
+    <div class="card-title" contenteditable="true" spellcheck="false">New Feature Title</div>
+    <div class="card-desc" contenteditable="true" spellcheck="false">Describe what this feature does and how students can use it to manage their email better.</div>
+    <div class="card-arrow">→</div>
+  `;
+  addBtn.before(card);
+  setTimeout(() => card.classList.add('visible'), 50);
+  card.querySelector('.card-title').focus();
+}
+
+function deleteCard(id) {
+  const el = document.getElementById(id);
+  if (el && confirm('Delete this feature card?')) el.remove();
+}
+
+// ══════════════════════════════════════════
+// ADD TIP CARD
+// ══════════════════════════════════════════
+function addTipCard() {
+  tipCount++;
+  const id = 'tip' + tipCount;
+  const addBtn = document.querySelector('#tipsTrack .add-tip-btn');
+  const card = document.createElement('div');
+  card.className = 'tip-card reveal';
+  card.id = id;
+  card.innerHTML = `
+    <button class="delete-tip-btn" onclick="deleteTip('${id}')" title="Delete">✕</button>
+    <div class="tip-emoji" contenteditable="true" spellcheck="false">💡</div>
+    <div class="tip-title" contenteditable="true" spellcheck="false">Tip Title</div>
+    <div class="tip-text" contenteditable="true" spellcheck="false">Write a helpful tip for students using Microsoft Outlook at university.</div>
+  `;
+  addBtn.before(card);
+  setTimeout(() => card.classList.add('visible'), 50);
+  card.querySelector('.tip-title').focus();
+}
+
+function deleteTip(id) {
+  const el = document.getElementById(id);
+  if (el && confirm('Delete this tip?')) el.remove();
+}
+
+// ══════════════════════════════════════════
+// ADD SHORTCUT ROW
+// ══════════════════════════════════════════
+function addShortcutRow() {
+  scCount++;
+  const id = 'sc' + scCount;
+  const grid = document.getElementById('shortcutsGrid');
+  const row = document.createElement('div');
+  row.className = 'shortcut-row reveal';
+  row.id = id;
+  row.innerHTML = `
+    <span class="shortcut-action" contenteditable="true" spellcheck="false">Action description</span>
+    <div class="shortcut-keys"><kbd contenteditable="true" spellcheck="false">Ctrl</kbd>+<kbd contenteditable="true" spellcheck="false">?</kbd></div>
+    <button class="delete-shortcut-btn" onclick="deleteShortcut('${id}')" title="Delete">✕</button>
+  `;
+  grid.appendChild(row);
+  setTimeout(() => row.classList.add('visible'), 50);
+  row.querySelector('.shortcut-action').focus();
+}
+
+function deleteShortcut(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+// ══════════════════════════════════════════
+// ADD NAV LINK
+// ══════════════════════════════════════════
+function addNavLink() {
+  const nav = document.getElementById('navLinks');
+  const ctaLi = nav.querySelector('li:last-child');
+  const li = document.createElement('li');
+  li.innerHTML = `<a href="#" contenteditable="true" spellcheck="false">New Link</a>`;
+  ctaLi.before(li);
+  li.querySelector('a').focus();
+}
+
+// ══════════════════════════════════════════
+// PREVIEW MODE (hide edit UI)
+// ══════════════════════════════════════════
+function removeEditMode() {
+  if (!confirm('Switch to Preview Mode? The edit toolbar and controls will be hidden. Refresh to get them back.')) return;
+  document.getElementById('editToolbar').style.display = 'none';
+  document.body.style.paddingTop = '0';
+  document.querySelector('nav').style.top = '0';
+  document.querySelector('.progress-bar').style.top = '0';
+  // remove all contenteditable
+  document.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  // hide all add/delete buttons
+  document.querySelectorAll('.add-card-btn, .add-tip-btn, .delete-card-btn, .delete-tip-btn, .delete-shortcut-btn').forEach(el => el.style.display = 'none');
+}
+
+// ══════════════════════════════════════════
+// EXPORT CLEAN HTML
+// ══════════════════════════════════════════
+function exportHTML() {
+  // Clone the document
+  const clone = document.documentElement.cloneNode(true);
+
+  // Remove edit toolbar
+  const tb = clone.querySelector('#editToolbar');
+  if (tb) tb.remove();
+
+  // Fix padding and nav top
+  const body = clone.querySelector('body');
+  body.style.paddingTop = '0';
+  const nav = clone.querySelector('nav');
+  if (nav) nav.style.top = '0';
+  const pb = clone.querySelector('.progress-bar');
+  if (pb) pb.style.top = '0';
+
+  // Remove contenteditable attrs
+  clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+  clone.querySelectorAll('[spellcheck]').forEach(el => el.removeAttribute('spellcheck'));
+
+  // Remove add/delete buttons
+  clone.querySelectorAll('.add-card-btn, .add-tip-btn, .delete-card-btn, .delete-tip-btn, .delete-shortcut-btn').forEach(el => el.remove());
+
+  // Remove edit-mode CSS block (first <style> tag containing edit mode styles)
+  const styles = clone.querySelectorAll('style');
+  // Remove the inline edit styles from body (they're in the main style block up top)
+  // We'll strip them by removing the section between the comments
+  styles.forEach(s => {
+    s.textContent = s.textContent.replace(/\/\* ══.*?EDIT MODE STYLES.*?══ \*\/[\s\S]*?\/\* ══.*?DESIGN TOKENS[\s\S]*/m, match => {
+      return match.replace(/\/\* ══.*?EDIT MODE STYLES.*?══ \*\/[\s\S]*?(?=\/\* ══.*?DESIGN TOKENS)/m, '/* TEMPLATE MODE STYLES REMOVED */\n');
+    });
+  });
+
+  // Remove the export/preview script functions block
+  const scripts = clone.querySelectorAll('script');
+  scripts.forEach(s => { s.textContent = s.textContent.replace(/\/\/ ══.*?EXPORT CLEAN HTML[\s\S]*/m, ''); });
+
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'outlookU_landing.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
